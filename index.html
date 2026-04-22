@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics of India | Unbiased, AI-Driven News</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #f4f4f4;
+            --text-muted: #888888;
+            --accent: #ff4a5a;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 5%;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 74, 90, 0.15), transparent 50%);
+        }
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 5rem 5%;
+        }
+        .news-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .tag {
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Analytics of India.</div>
+    </nav>
+
+    <section class="hero">
+        <h1>The Truth,<br>Decoded.</h1>
+        <p>100% Unbiased, AI-verified news and analytics for the modern Indian citizen. No noise. Just facts.</p>
+    </section>
+
+    <section class="news-grid" id="news-container">
+        <div class="news-card">
+            <span class="tag">System Update</span>
+            <h2>AI Engine Initializing</h2>
+            <p>The Analytics of India automated neural network is currently being deployed. Real-time, unbiased news synthesis will begin shortly.</p>
+        </div>
+    </section>
+
+</body>
+</html>
