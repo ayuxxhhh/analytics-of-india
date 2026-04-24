@@ -35,11 +35,7 @@
             letter-spacing: -1px;
         }
         .hero {
-            height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 5%;
+            padding: 6rem 5% 4rem 5%;
             background: radial-gradient(circle at 50% 0%, rgba(255, 74, 90, 0.15), transparent 50%);
         }
         .hero h1 {
@@ -52,13 +48,12 @@
             font-size: 1.2rem;
             color: var(--text-muted);
             max-width: 600px;
-            margin-bottom: 2rem;
         }
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
-            padding: 5rem 5%;
+            padding: 2rem 5% 5rem 5%;
         }
         .news-card {
             background: rgba(255,255,255,0.03);
@@ -72,12 +67,29 @@
             border-color: rgba(255,255,255,0.2);
         }
         .tag {
-            color: var(--accent);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 1rem;
-            display: block;
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tag-report { background: var(--accent); color: #fff; }
+        .tag-news { color: var(--accent); border: 1px solid var(--accent); }
+        .loading {
+            text-align: center;
+            padding: 5rem;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
     </style>
 </head>
@@ -93,13 +105,75 @@
     </section>
 
     <section class="news-grid" id="news-container">
+        <div class="loading">Establishing secure connection to Analytics Engine... Fetching data...</div>
+    </section>
 
-        <div class="news-card" style="border-color: var(--accent); background: rgba(255, 74, 90, 0.05);">
-            <span class="tag" style="color: #fff; background: var(--accent); padding: 4px 8px; border-radius: 4px; font-weight: bold;">ORIGINAL REPORT</span>
-            <h2>The Future of Indian Analytics</h2>
-            <div style="color: var(--text-muted); line-height: 1.6; margin-top: 1rem; white-space: pre-wrap;">This is the full text of my first original report. As a communications specialist, I can write complete, in-depth articles here. There is no limit to how long this text can be. The automated engine will read this file, format it beautifully, and pin it to the very top of the live website under an "ORIGINAL REPORT" banner.</div>
-        </div>
-</section>
+    <script>
+        async function loadData() {
+            const container = document.getElementById('news-container');
+            
+            try {
+                // To bypass browser cache on updates, we append a timestamp
+                const response = await fetch('data.json?v=' + new Date().getTime());
+                if (!response.ok) throw new Error('Data not ready yet.');
+                
+                const data = await response.json();
+                container.innerHTML = ''; // Clear loading message
 
+                data.forEach(item => {
+                    if (item.type === 'report') {
+                        container.innerHTML += `
+                            <div class="news-card" style="border-color: var(--accent); background: rgba(255, 74, 90, 0.05); grid-column: 1 / -1;">
+                                <span class="tag tag-report">EXCLUSIVE REPORT</span>
+                                <h2>${item.title}</h2>
+                                <div style="color: var(--text-muted); line-height: 1.6; margin-top: 1rem; white-space: pre-wrap;">${item.body}</div>
+                            </div>
+                        `;
+                    } else if (item.type === 'news') {
+                        const score = item.score || 50;
+                        let barColor = "#ff4a5a";
+                        if (score < 40) barColor = "#4CAF50";
+                        else if (score < 70) barColor = "#FFC107";
+
+                        container.innerHTML += `
+                            <div class="news-card">
+                                <span class="tag tag-news">AI SYNDICATE</span>
+                                <h2>${item.title}</h2>
+                                
+                                <div style="margin: 1.5rem 0; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; font-weight: bold; text-transform: uppercase;">
+                                        <span>Sensationalism Risk</span>
+                                        <span>${score}/100</span>
+                                    </div>
+                                    <div style="width: 100%; background: #1a1a1a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div style="width: ${score}%; background: ${barColor}; height: 100%;"></div>
+                                    </div>
+                                </div>
+
+                                <div style="color: var(--text-main); line-height: 1.7;">${item.summary}</div>
+                                
+                                <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; border-left: 3px solid var(--text-muted); margin-top: 1.5rem; font-size: 0.95rem;">
+                                    <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Context Analysis</h4>
+                                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">${item.analysis}</p>
+                                    
+                                    <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Bias Breakdown</h4>
+                                    <p style="color: var(--text-muted); line-height: 1.6;">${item.bias}</p>
+                                </div>
+                                
+                                <a href="${item.link}" target="_blank" style="display: inline-block; margin-top: 1.5rem; color: #fff; text-decoration: none; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 4px;">
+                                    Verify Original Source ↗
+                                </a>
+                            </div>
+                        `;
+                    }
+                });
+            } catch (error) {
+                container.innerHTML = '<div class="loading">System compiling initial data. Please refresh in a few minutes.</div>';
+            }
+        }
+
+        //Initialise engine on page load
+        window.onload = loadData;
+    </script>
 </body>
 </html>
