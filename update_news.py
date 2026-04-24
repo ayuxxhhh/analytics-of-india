@@ -76,19 +76,18 @@ def generate_neutral_content(articles):
     for article in articles:
         print(f"Drafting full analysis for: {article['title'][:30]}...")
         
-        # We now instruct the AI to return strictly formatted JSON data
         prompt = f"""
         Act as a strictly neutral, highly professional data and news analyst. 
         Take this news headline: "{article['title']}"
         
-        You MUST return the output ONLY as a valid JSON object. Do not add any conversational text or markdown formatting outside of the JSON block.
+        You MUST return the output ONLY as a valid JSON object. Do not add any conversational text.
         Use these exact keys:
         {{
             "title": "A neutral, factual title",
             "summary": "3 paragraphs of factual reporting, separated by HTML <br><br> tags",
             "analysis": "1 paragraph analyzing the broader implications or context",
             "bias": "1 paragraph explaining the potential biases in mainstream reporting",
-            "score": a single integer from 1 to 100 representing sensationalism risk (1=fact, 100=propaganda)
+            "score": a single integer from 1 to 100 representing sensationalism risk
         }}
         """
         
@@ -98,27 +97,27 @@ def generate_neutral_content(articles):
                     model='gemini-2.5-flash',
                     contents=prompt
                 )
-                text = response.text.strip()
+                text = response.text
                 
-                # Strip out any markdown code blocks if the AI accidentally includes them
-                if text.startswith("```json"):
-                    text = text[7:]
-                if text.startswith("```"):
-                    text = text[3:]
-                if text.endswith("```"):
-                    text = text[:-3]
-                text = text.strip()
+                # The Bulletproof JSON Vacuum: Only grab what is between { and }
+                json_match = re.search(r'\{.*\}', text, re.DOTALL)
+                if not json_match:
+                    raise ValueError(f"No JSON formatting found in AI response.")
+                    
+                data = json.loads(json_match.group(0))
                 
-                # Parse the strict JSON data
-                data = json.loads(text)
+                # Using .get() prevents crashes if the AI accidentally renames a key
+                title = data.get('title', 'News Update')
+                summary = data.get('summary', 'Summary processing failed.')
+                analysis = data.get('analysis', 'Analysis processing failed.')
+                bias = data.get('bias', 'Bias processing failed.')
                 
-                title = data['title']
-                summary = data['summary']
-                analysis = data['analysis']
-                bias = data['bias']
-                score = int(data['score'])
+                # Safely convert score to integer
+                try:
+                    score = int(data.get('score', 50))
+                except ValueError:
+                    score = 50
                 
-                # Dynamic Bar Color Logic
                 bar_color = "#ff4a5a" 
                 if score < 40:
                     bar_color = "#4CAF50" 
@@ -155,6 +154,7 @@ def generate_neutral_content(articles):
             </a>
         </div>"""
                 html_cards += card_html
+                print(f"Success: {title}")
                 break 
                 
             except Exception as e:
@@ -162,8 +162,9 @@ def generate_neutral_content(articles):
                     print("Server busy. Waiting 5 seconds...")
                     time.sleep(5)
                 else:
-                    print(f"Data formatting error. Skipping article.")
-                    break 
+                    print(f"Data formatting error on attempt {attempt+1}: {e}")
+                    if attempt == max_retries - 1:
+                        print("Skipping article after 3 failed attempts.")
         
         time.sleep(4) 
             
@@ -171,12 +172,13 @@ def generate_neutral_content(articles):
 
 def update_html(new_content):
     if not new_content.strip():
-        sys.exit(1)
+        print("CRITICAL: No AI content generated. Pushing user reports only.")
         
     with open('index.html', 'r', encoding='utf-8') as file:
         html = file.read()
         
     pattern = r'(<section class="news-grid" id="news-container">)(.*?)(</section>)'
+    # We push updates even if the AI content is empty, so your reports always show
     updated_html = re.sub(pattern, r'\1\n' + new_content + r'\n\3', html, flags=re.DOTALL)
     
     with open('index.html', 'w', encoding='utf-8') as file:
