@@ -6,6 +6,7 @@ from google import genai
 import sys
 import time
 import glob
+import json
 
 # Verify API Key
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -74,16 +75,21 @@ def generate_neutral_content(articles):
     
     for article in articles:
         print(f"Drafting full analysis for: {article['title'][:30]}...")
+        
+        # We now instruct the AI to return strictly formatted JSON data
         prompt = f"""
         Act as a strictly neutral, highly professional data and news analyst. 
         Take this news headline: "{article['title']}"
         
-        Return the output in this EXACT format, including the exact labels:
-        Title: [A neutral, factual title]
-        Summary: [3 paragraphs of factual reporting, separated by HTML <br><br> tags]
-        Analysis: [1 paragraph analyzing the broader implications or context of this event]
-        Bias: [1 paragraph explaining the potential biases found in mainstream reporting of this topic]
-        Score: [A single number from 1 to 100 representing how sensationalized or politically charged this topic usually is in the media. 1 is pure dry fact, 100 is pure clickbait/propaganda]
+        You MUST return the output ONLY as a valid JSON object. Do not add any conversational text or markdown formatting outside of the JSON block.
+        Use these exact keys:
+        {{
+            "title": "A neutral, factual title",
+            "summary": "3 paragraphs of factual reporting, separated by HTML <br><br> tags",
+            "analysis": "1 paragraph analyzing the broader implications or context",
+            "bias": "1 paragraph explaining the potential biases in mainstream reporting",
+            "score": a single integer from 1 to 100 representing sensationalism risk (1=fact, 100=propaganda)
+        }}
         """
         
         for attempt in range(max_retries):
@@ -92,23 +98,33 @@ def generate_neutral_content(articles):
                     model='gemini-2.5-flash',
                     contents=prompt
                 )
-                text = response.text
+                text = response.text.strip()
                 
-                # Robust extraction using Regex
-                title = re.search(r'Title:\s*(.*)', text).group(1).strip()
-                summary = re.search(r'Summary:\s*(.*?)(?=Analysis:)', text, re.DOTALL).group(1).strip()
-                analysis = re.search(r'Analysis:\s*(.*?)(?=Bias:)', text, re.DOTALL).group(1).strip()
-                bias = re.search(r'Bias:\s*(.*?)(?=Score:)', text, re.DOTALL).group(1).strip()
-                score = re.search(r'Score:\s*(\d+)', text).group(1).strip()
+                # Strip out any markdown code blocks if the AI accidentally includes them
+                if text.startswith("```json"):
+                    text = text[7:]
+                if text.startswith("```"):
+                    text = text[3:]
+                if text.endswith("```"):
+                    text = text[:-3]
+                text = text.strip()
                 
-                # Determine bar color based on sensationalism score
-                bar_color = "#ff4a5a" # Red for high bias
-                if int(score) < 40:
-                    bar_color = "#4CAF50" # Green for low bias
-                elif int(score) < 70:
-                    bar_color = "#FFC107" # Yellow for medium
+                # Parse the strict JSON data
+                data = json.loads(text)
                 
-                # Constructing the UI Dashboard Card
+                title = data['title']
+                summary = data['summary']
+                analysis = data['analysis']
+                bias = data['bias']
+                score = int(data['score'])
+                
+                # Dynamic Bar Color Logic
+                bar_color = "#ff4a5a" 
+                if score < 40:
+                    bar_color = "#4CAF50" 
+                elif score < 70:
+                    bar_color = "#FFC107" 
+                
                 card_html = f"""
         <div class="news-card">
             <span class="tag">ANALYTICS ENGINE</span>
@@ -143,9 +159,10 @@ def generate_neutral_content(articles):
                 
             except Exception as e:
                 if "503" in str(e) or "429" in str(e):
+                    print("Server busy. Waiting 5 seconds...")
                     time.sleep(5)
                 else:
-                    print(f"Regex/AI parsing error. Skipping article.")
+                    print(f"Data formatting error. Skipping article.")
                     break 
         
         time.sleep(4) 
