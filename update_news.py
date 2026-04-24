@@ -2,7 +2,7 @@ import os
 import re
 import requests
 import xml.etree.ElementTree as ET
-import google.generativeai as genai
+from google import genai
 import sys
 
 # 1. Verify API Key
@@ -11,9 +11,8 @@ if not api_key:
     print("CRITICAL ERROR: GEMINI_API_KEY is missing. Please check your GitHub Secrets.")
     sys.exit(1)
 
-# Configure the AI
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# Configure the AI using the new 2026 SDK
+client = genai.Client(api_key=api_key)
 
 def get_latest_news():
     print("Fetching news from Google RSS...")
@@ -57,7 +56,11 @@ def generate_neutral_content(articles):
         """
         
         try:
-            response = model.generate_content(prompt)
+            # Using the new Client syntax and latest lightning-fast model
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt
+            )
             text = response.text
             
             lines = text.split('\n')
