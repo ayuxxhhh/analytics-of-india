@@ -34,25 +34,34 @@ def get_user_reports():
     return reports
 
 def get_latest_news():
-    print("Fetching Google News...")
-    url = "https://news.google.com/rss?gl=IN&ceid=IN:en"
-    # Using a heavier User-Agent so Google doesn't block the connection
+    print("Fetching Times of India News...")
+    # Swapped to TOI because Google News frequently blocks GitHub Actions IPs
+    url = "https://timesofindia.indiatimes.com/rssfeedstopstories.cms"
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=15)
         response.raise_for_status()
         root = ET.fromstring(response.content)
-        articles = [{'title': item.find('title').text, 'link': item.find('link').text} for item in root.findall('.//item')[:12]]
-        print(f"Successfully grabbed {len(articles)} articles from RSS.")
+        articles = [{'title': item.find('title').text, 'link': item.find('link').text} for item in root.findall('.//item')[:10]]
         return articles
     except Exception as e:
-        print(f"Error fetching news: {e}")
-        return []
+        print(f"RSS ERROR: {e}")
+        # If RSS gets blocked, inject an error card so we can see it on the website
+        return [{"error": f"RSS Fetch Failed: {e}"}]
 
 def generate_all_news(articles):
+    # Check if the RSS feed passed us an error
+    if articles and "error" in articles[0]:
+        return [{
+            "type": "news", "title": "System Alert: Data Feed Blocked", 
+            "summary": articles[0]["error"], "analysis": "The news source blocked the server connection.", 
+            "bias": "N/A", "score": 100, "link": "#"
+        }]
+        
     if not articles: return []
+    
     articles_text = "\n".join([f"Title: {a['title']} | Link: {a['link']}" for a in articles])
     
     prompt = f"""
@@ -63,7 +72,6 @@ def generate_all_news(articles):
     {articles_text}
     """
     
-    # The crucial Retry Logic is back
     max_retries = 4
     for attempt in range(max_retries):
         try:
@@ -78,17 +86,20 @@ def generate_all_news(articles):
             data = json.loads(response.text)
             for item in data:
                 item["type"] = "news"
-            print("AI processing successful!")
             return data
             
         except Exception as e:
-            print(f"Server busy or AI Error: {e}")
+            print(f"AI Error: {e}")
             if attempt < max_retries - 1:
-                print("Waiting 10 seconds to let the server cool down...")
                 time.sleep(10)
             else:
-                print("FATAL: AI failed after all retries.")
-                return []
+                # If the AI fails completely, inject an error card so we can see it on the website
+                return [{
+                    "type": "news", "title": "System Alert: AI Engine Timeout", 
+                    "summary": f"The Gemini AI failed to process the request after {max_retries} attempts. Error: {str(e)}", 
+                    "analysis": "This usually means the free tier API is currently overloaded.", 
+                    "bias": "N/A", "score": 100, "link": "#"
+                }]
 
 if __name__ == "__main__":
     print("Gathering data...")
