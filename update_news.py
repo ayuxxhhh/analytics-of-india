@@ -5,21 +5,51 @@ import xml.etree.ElementTree as ET
 from google import genai
 import sys
 import time
+import glob
 
-# 1. Verify API Key
+# Verify API Key
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    print("CRITICAL ERROR: GEMINI_API_KEY is missing. Please check your GitHub Secrets.")
+    print("CRITICAL ERROR: GEMINI_API_KEY is missing.")
     sys.exit(1)
 
-# Configure the AI using the new SDK
 client = genai.Client(api_key=api_key)
 
+def get_user_reports():
+    print("Checking backend for original editorial reports...")
+    reports_html = ""
+    
+    if not os.path.exists('reports'):
+        os.makedirs('reports')
+        return reports_html
+
+    report_files = glob.glob('reports/*.txt')
+    for file_path in report_files:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            lines = content.split('\n', 1)
+            title = lines[0].strip() if len(lines) > 0 else "Untitled Report"
+            body = lines[1].strip() if len(lines) > 1 else ""
+            
+            card_html = f"""
+        <div class="news-card" style="border-color: var(--accent); background: rgba(255, 74, 90, 0.05);">
+            <span class="tag" style="color: #fff; background: var(--accent); padding: 4px 8px; border-radius: 4px; font-weight: bold;">ORIGINAL REPORT</span>
+            <h2>{title}</h2>
+            <div style="color: var(--text-muted); line-height: 1.6; margin-top: 1rem; white-space: pre-wrap;">{body}</div>
+        </div>"""
+            reports_html += card_html
+        except Exception as e:
+            print(f"Error reading report {file_path}: {e}")
+            
+    return reports_html
+
 def get_latest_news():
-    print("Fetching news from Google RSS...")
+    print("Fetching expanded news roster and source links...")
     url = "https://news.google.com/rss?gl=IN&ceid=IN:en"
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
     
     try:
@@ -28,12 +58,10 @@ def get_latest_news():
         root = ET.fromstring(response.content)
         
         articles = []
-        for item in root.findall('.//item')[:6]:
+        for item in root.findall('.//item')[:15]:
             title = item.find('title').text
-            articles.append(title)
-            
-        if not articles:
-            print("Warning: No articles were found in the RSS feed.")
+            link = item.find('link').text
+            articles.append({'title': title, 'link': link})
             
         return articles
     except Exception as e:
@@ -42,21 +70,22 @@ def get_latest_news():
 
 def generate_neutral_content(articles):
     html_cards = ""
+    max_retries = 3
     
     for article in articles:
-        print(f"Processing: {article[:30]}...")
+        print(f"Drafting full analysis for: {article['title'][:30]}...")
         prompt = f"""
-        Act as a strictly neutral, highly professional news analyst. 
-        Take this news headline/topic: "{article}"
-        Write a short, 2-sentence summary of the facts. 
-        Strip away all political bias, sensationalism, and emotion. 
-        Return the output in this EXACT format (no markdown formatting, no extra words):
-        Title: [Neutral Title]
-        Summary: [2-sentence factual summary]
+        Act as a strictly neutral, highly professional data and news analyst. 
+        Take this news headline: "{article['title']}"
+        
+        Return the output in this EXACT format, including the exact labels:
+        Title: [A neutral, factual title]
+        Summary: [3 paragraphs of factual reporting, separated by HTML <br><br> tags]
+        Analysis: [1 paragraph analyzing the broader implications or context of this event]
+        Bias: [1 paragraph explaining the potential biases found in mainstream reporting of this topic]
+        Score: [A single number from 1 to 100 representing how sensationalized or politically charged this topic usually is in the media. 1 is pure dry fact, 100 is pure clickbait/propaganda]
         """
         
-        # Retry Logic added here
-        max_retries = 3
         for attempt in range(max_retries):
             try:
                 response = client.models.generate_content(
@@ -65,50 +94,81 @@ def generate_neutral_content(articles):
                 )
                 text = response.text
                 
-                lines = text.split('\n')
-                title = lines[0].replace('Title: ', '').strip()
-                summary = lines[1].replace('Summary: ', '').strip()
+                # Robust extraction using Regex
+                title = re.search(r'Title:\s*(.*)', text).group(1).strip()
+                summary = re.search(r'Summary:\s*(.*?)(?=Analysis:)', text, re.DOTALL).group(1).strip()
+                analysis = re.search(r'Analysis:\s*(.*?)(?=Bias:)', text, re.DOTALL).group(1).strip()
+                bias = re.search(r'Bias:\s*(.*?)(?=Score:)', text, re.DOTALL).group(1).strip()
+                score = re.search(r'Score:\s*(\d+)', text).group(1).strip()
                 
+                # Determine bar color based on sensationalism score
+                bar_color = "#ff4a5a" # Red for high bias
+                if int(score) < 40:
+                    bar_color = "#4CAF50" # Green for low bias
+                elif int(score) < 70:
+                    bar_color = "#FFC107" # Yellow for medium
+                
+                # Constructing the UI Dashboard Card
                 card_html = f"""
         <div class="news-card">
-            <span class="tag">LATEST BRIEFING</span>
+            <span class="tag">ANALYTICS ENGINE</span>
             <h2>{title}</h2>
-            <p>{summary}</p>
+            
+            <div style="margin: 1.5rem 0; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+                    <span>Media Sensationalism Risk</span>
+                    <span>{score}/100</span>
+                </div>
+                <div style="width: 100%; background: #1a1a1a; height: 6px; border-radius: 3px; overflow: hidden;">
+                    <div style="width: {score}%; background: {bar_color}; height: 100%;"></div>
+                </div>
+            </div>
+
+            <div style="color: var(--text-main); line-height: 1.7;">{summary}</div>
+            
+            <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; border-left: 3px solid var(--text-muted); margin-top: 1.5rem; font-size: 0.95rem;">
+                <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Context Analysis</h4>
+                <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">{analysis}</p>
+                
+                <h4 style="color: #fff; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Bias Breakdown</h4>
+                <p style="color: var(--text-muted); line-height: 1.6;">{bias}</p>
+            </div>
+            
+            <a href="{article['link']}" target="_blank" style="display: inline-block; margin-top: 1.5rem; color: #fff; text-decoration: none; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 4px; transition: all 0.2s;">
+                Verify Original Source ↗
+            </a>
         </div>"""
                 html_cards += card_html
-                break # Success! Break out of the retry loop.
+                break 
                 
             except Exception as e:
                 if "503" in str(e) or "429" in str(e):
-                    print(f"Server busy. Retrying in 5 seconds... (Attempt {attempt + 1} of {max_retries})")
-                    time.sleep(5) # Wait 5 seconds before trying again
+                    time.sleep(5)
                 else:
-                    print(f"Skipping article due to AI error: {e}")
-                    break # Not a traffic issue, skip to the next article
+                    print(f"Regex/AI parsing error. Skipping article.")
+                    break 
         
-        # Polite pause between articles so we don't overwhelm the free server
-        time.sleep(2) 
+        time.sleep(4) 
             
     return html_cards
 
 def update_html(new_content):
     if not new_content.strip():
-        print("No new content generated. Aborting HTML update so the site doesn't go blank.")
         sys.exit(1)
         
-    print("Reading index.html...")
     with open('index.html', 'r', encoding='utf-8') as file:
         html = file.read()
         
     pattern = r'(<section class="news-grid" id="news-container">)(.*?)(</section>)'
     updated_html = re.sub(pattern, r'\1\n' + new_content + r'\n\3', html, flags=re.DOTALL)
     
-    print("Writing updated index.html...")
     with open('index.html', 'w', encoding='utf-8') as file:
         file.write(updated_html)
 
 if __name__ == "__main__":
+    user_reports = get_user_reports()
     news_items = get_latest_news()
-    new_html_content = generate_neutral_content(news_items)
-    update_html(new_html_content)
-    print("Script completed successfully!")
+    ai_news = generate_neutral_content(news_items)
+    final_content = user_reports + ai_news
+    update_html(final_content)
+    print("Deployment complete!")
