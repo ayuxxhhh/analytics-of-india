@@ -76,3 +76,32 @@ This is the easiest free stack:
 - Add audit columns (`updated_at`, `approved_by`).
 
 If you want, next PR can implement **Step 1–3** directly in this repo.
+
+
+## If your PR shows merge conflicts (exact fix)
+
+If conflicts are in `README.md`, `requirements.txt`, and `update_news.py` exactly like your screenshot,
+use this resolution strategy:
+
+1. **Keep current change** for all three files (the RSS/no-AI version).
+2. Remove all conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`).
+3. Verify final files are:
+   - `requirements.txt` contains only `requests`
+   - `update_news.py` contains RSS fetch logic (`INDIA_TOP_STORIES_RSS` and `GLOBAL_TOP_STORIES_RSS`) and no `google-genai`/`openai` imports
+4. Run:
+   ```bash
+   python -m py_compile update_news.py
+   python update_news.py
+   ```
+5. Commit conflict resolution and push.
+
+### CLI one-liner approach
+
+```bash
+git checkout --ours README.md requirements.txt update_news.py
+git add README.md requirements.txt update_news.py
+git commit -m "Resolve merge conflicts keeping RSS pipeline"
+git push
+```
+
+After push, GitHub PR should become mergeable.
