@@ -7,8 +7,8 @@
   {
     "type": "news",
     "title": "System Alert: AI Engine Timeout",
-    "summary": "The Gemini AI failed to process the request after 4 attempts. Error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}",
-    "analysis": "This usually means the free tier API is currently overloaded.",
+    "summary": "The AI provider failed to process the request after 4 attempts. Error: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}",
+    "analysis": "This usually means the selected API is overloaded, misconfigured, or rate-limited.",
     "bias": "N/A",
     "score": 100,
     "link": "#"
