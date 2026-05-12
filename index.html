@@ -1,290 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Analytics of India | Unbiased News & Geopolitical Intelligence</title>
-    <meta name="title" content="Analytics of India | Unbiased News & Geopolitical Intelligence">
-    <meta name="description" content="A premium intelligence platform delivering the top unbiased news, geopolitical analysis, and editorial reports from India and the globe.">
-    <meta name="keywords" content="India news, global geopolitics, political analysis, Indian economy, unbiased journalism, Analytics of India">
-    <meta name="robots" content="index, follow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --text: #e5e5e5;
-            --text-dim: #808080;
-            --accent: #ff3b30;
-            --max-width: 1200px;
-            --reading-width: 720px;
-            --nav-height: 70px;
-        }
+  <title>Analytics of India | Decoding India Through Data</title>
+  <meta name="title" content="Analytics of India | Decoding India Through Data" />
+  <meta name="description" content="A premium intelligence platform delivering data-led perspectives on India's markets, growth, technology, behaviour, and future." />
+  <meta name="keywords" content="Analytics of India, India data insights, India intelligence platform, markets, technology, economy" />
+  <meta name="robots" content="index, follow" />
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+  <style>
+    :root {
+      --bg: #050505;
+      --surface: #111111;
+      --surface-soft: #0d0d0d;
+      --text: #f5f1e8;
+      --text-dim: #a9a39a;
+      --accent: #f7931e;
+      --accent-secondary: #c8742a;
+      --border: rgba(245, 241, 232, 0.12);
+      --max-width: 1240px;
+    }
 
-        /* --- Navigation --- */
-        nav {
-            position: fixed;
-            top: 0; width: 100%;
-            height: var(--nav-height);
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 5%;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -1px; }
-        
-        .nav-links { display: flex; gap: 2.5rem; }
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-            cursor: pointer;
-        }
-        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    html, body { background: var(--bg); color: var(--text); font-family: "Manrope", sans-serif; }
+    body { line-height: 1.65; overflow-x: hidden; }
 
-        /* --- Layout --- */
-        header {
-            max-width: var(--max-width);
-            margin: 120px auto 60px auto;
-            padding: 0 5%;
-        }
+    .container { width: min(var(--max-width), 92vw); margin: 0 auto; }
+    section { padding: 4.5rem 0; border-top: 1px solid rgba(245, 241, 232, 0.04); }
 
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 7vw, 4.5rem);
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(12px);
+      background: rgba(5, 5, 5, 0.84);
+      border-bottom: 1px solid rgba(245, 241, 232, 0.08);
+    }
 
-        .section-label {
-            max-width: var(--max-width);
-            margin: 4rem auto 2rem auto;
-            padding: 0 5%;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent);
-        }
+    .nav-inner {
+      min-height: 76px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
 
-        /* --- Content Containers --- */
-        .content-view {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 0 5% 100px 5%;
-        }
+    .logo { font: 700 1rem/1 "Sora", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; }
+    .logo span { color: var(--accent); }
 
-        .reports-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 6rem;
-        }
+    .nav-links { display: flex; gap: 1.8rem; }
+    .nav-links a {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      position: relative;
+      transition: color .3s ease;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0; bottom: -6px;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width .3s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
 
-        .report-card h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
+    .hero {
+      padding: 7rem 0 4rem;
+      border-top: 0;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .eyebrow { color: var(--accent-secondary); text-transform: uppercase; letter-spacing: .13em; font-size: .76rem; margin-bottom: 1.2rem; }
+    .hero h1 {
+      font-family: "Sora", sans-serif;
+      font-size: clamp(2.25rem, 5.5vw, 4.9rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.3rem;
+    }
+    .hero h1 .accent { color: var(--accent); }
+    .hero p { font-size: 1.08rem; color: var(--text-dim); max-width: 52ch; }
 
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 4rem 3rem;
-        }
+    .cta-row { margin-top: 2.2rem; display: flex; gap: .9rem; flex-wrap: wrap; }
+    .btn {
+      border-radius: 10px;
+      padding: .9rem 1.35rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .25s ease;
+      font-size: .94rem;
+      border: 1px solid transparent;
+      display: inline-flex;
+    }
+    .btn-primary { background: var(--accent); color: #17110a; }
+    .btn-primary:hover { box-shadow: 0 0 24px rgba(247,147,30,.34); transform: translateY(-1px); }
+    .btn-secondary { border-color: rgba(245,241,232,.45); color: var(--text); background: transparent; }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        .news-card {
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        .news-card:hover { transform: translateY(-5px); }
-        .news-card .source { font-size: 0.65rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase; }
-        .news-card h3 { font-size: 1.2rem; line-height: 1.4; margin-bottom: 0.8rem; }
-        .news-card p { color: var(--text-dim); font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .map-wrap {
+      background: radial-gradient(circle at 30% 30%, rgba(247,147,30,.12), transparent 45%), var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      min-height: 390px;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
 
-        /* --- Breakdown Side-Panel --- */
-        #breakdown-panel {
-            position: fixed;
-            top: 0; right: -100%;
-            width: 100%; max-width: 550px;
-            height: 100%;
-            background: var(--surface);
-            z-index: 2000;
-            padding: 80px 40px;
-            box-shadow: -20px 0 60px rgba(0,0,0,0.5);
-            transition: right 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            overflow-y: auto;
-        }
+    .trust-bar { padding: 1.1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .trust-bar p { text-align: center; color: var(--text-dim); letter-spacing: .06em; font-size: .83rem; text-transform: uppercase; }
 
-        #breakdown-panel.active { right: 0; }
-        .close-btn { position: absolute; top: 30px; left: 40px; cursor: pointer; color: var(--text-dim); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+    h2.section-title {
+      font: 700 clamp(1.6rem, 3.2vw, 2.8rem)/1.2 "Sora", sans-serif;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.8rem;
+    }
 
-        .panel-content h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 2rem; line-height: 1.2; }
-        .panel-label { font-size: 0.65rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin: 2rem 0 0.5rem 0; }
-        .panel-text { font-size: 1.05rem; color: var(--text); opacity: 0.9; margin-bottom: 1rem; }
-        .panel-link { display: inline-block; margin-top: 3rem; padding: 12px 24px; border: 1px solid var(--text-dim); color: var(--text); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: border-color 0.3s, color 0.3s; }
-        .panel-link:hover { border-color: var(--accent); color: var(--accent); }
+    .cards-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.35rem;
+      min-height: 220px;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(247,147,30,.5); box-shadow: 0 0 28px rgba(247,147,30,.15); }
+    .card .label { font-size: .74rem; color: var(--accent-secondary); letter-spacing: .11em; text-transform: uppercase; }
+    .card h3 { font: 600 1.42rem/1.25 "Sora", sans-serif; margin-top: .85rem; }
 
-        #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); opacity: 0; visibility: hidden;
-            transition: 0.3s; z-index: 1500;
-        }
-        #overlay.active { opacity: 1; visibility: visible; }
+    .viz-strip {
+      padding: 5rem 0;
+      background:
+        linear-gradient(120deg, rgba(247,147,30,.10), transparent 28%),
+        repeating-linear-gradient(90deg, rgba(245,241,232,.04) 0 1px, transparent 1px 120px),
+        var(--surface-soft);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .viz-strip h2 { text-align: center; max-width: 12ch; margin: 0 auto; }
 
-        .hidden { display: none; }
-    </style>
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    .why-statement { font: 600 clamp(1.4rem, 2.9vw, 2.2rem)/1.28 "Sora", sans-serif; color: var(--text); max-width: 18ch; }
+    .principles { display: grid; gap: 1.2rem; }
+    .principle { padding: 1rem 0; border-bottom: 1px solid rgba(245,241,232,.12); }
+    .principle strong { color: var(--accent); font-size: .82rem; letter-spacing: .1em; }
+
+    .signature {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(17,17,17,.98), rgba(10,10,10,.96));
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .signature::after {
+      content: "";
+      position: absolute; inset: auto -15% -38% auto;
+      width: 360px; height: 360px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(247,147,30,.2), transparent 60%);
+    }
+    .signature h3 { font: 700 clamp(1.6rem, 3vw, 2.8rem)/1.2 "Sora", sans-serif; max-width: 16ch; }
+    .signature a { color: var(--accent); text-decoration: none; font-weight: 600; display: inline-block; margin-top: 1.35rem; }
+
+    .category-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem; }
+    .category {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      min-height: 84px;
+      display: grid;
+      place-items: center;
+      font-family: "Sora", sans-serif;
+      transition: all .22s ease;
+    }
+    .category:hover { border-color: rgba(247,147,30,.55); color: var(--accent); box-shadow: 0 0 20px rgba(247,147,30,.15); }
+
+    .newsletter {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .newsletter p { color: var(--text-dim); margin: .8rem 0 1.6rem; }
+    .newsletter-form { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; }
+    input[type="email"] {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      min-width: min(420px, 88vw);
+      padding: .92rem .95rem;
+    }
+
+    footer { padding: 2.6rem 0 3.6rem; border-top: 1px solid var(--border); }
+    .footer-grid { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 1.1rem; }
+    .footer-links a { color: var(--text-dim); text-decoration: none; font-size: .9rem; }
+    .footer-tag { margin-top: 1.6rem; color: var(--text-dim); letter-spacing: .08em; text-transform: uppercase; font-size: .75rem; }
+
+    @media (max-width: 1024px) {
+      .hero-grid, .why-grid { grid-template-columns: 1fr; }
+      .cards-3 { grid-template-columns: 1fr; }
+      .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .node { animation: pulse 4s ease-in-out infinite; }
+      .line { animation: fadeLine 6s ease-in-out infinite; }
+      @keyframes pulse { 0%,100% { opacity: .55; r: 4; } 50% { opacity: 1; r: 6; } }
+      @keyframes fadeLine { 0%,100% { opacity: .2; } 50% { opacity: .65; } }
+    }
+  </style>
 </head>
 <body>
+  <nav>
+    <div class="container nav-inner">
+      <div class="logo">analytics of <span>india</span></div>
+      <div class="nav-links">
+        <a href="#insights">Insights</a>
+        <a href="#reports">Reports</a>
+        <a href="#categories">Categories</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
 
-    <nav>
-        <div class="logo">analytics of india.</div>
-        <div class="nav-links">
-            <a onclick="switchTab('reports')" id="tab-reports" class="active">Reports</a>
-            <a onclick="switchTab('india')" id="tab-india">India</a>
-            <a onclick="switchTab('global')" id="tab-global">Global</a>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Premium intelligence platform</div>
+        <h1>India. Through Data.<br />Insights. For <span class="accent">Impact.</span></h1>
+        <p>Data-led perspectives on India’s markets, growth, technology, behaviour, and future.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#insights">Explore Insights</a>
+          <a class="btn btn-secondary" href="#reports">View Reports</a>
         </div>
-    </nav>
-
-    <header>
-        <h1 id="view-title">Original<br>Investigations.</h1>
-        <p class="hero-meta" id="view-desc">In-depth editorial analysis from the AOI newsroom.</p>
-    </header>
-
-    <div id="reports-view" class="content-view">
-        <div id="reports-container" class="reports-grid"></div>
+      </div>
+      <div class="map-wrap" aria-label="India data network map visualization">
+        <svg viewBox="0 0 600 420" width="100%" height="100%" role="img" aria-label="Animated India node map">
+          <defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="3.2" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <g stroke="#c8742a" stroke-width="1.2" fill="none" opacity=".55">
+            <path class="line" d="M160 280 L240 235 L320 170 L402 160" />
+            <path class="line" d="M240 235 L290 300 L390 300" />
+            <path class="line" d="M290 300 L430 245" />
+            <path class="line" d="M320 170 L430 245" />
+          </g>
+          <g fill="#f7931e" filter="url(#glow)">
+            <circle class="node" cx="240" cy="235" r="5" /><text x="252" y="231" fill="#f5f1e8" font-size="11">Mumbai</text>
+            <circle class="node" cx="290" cy="300" r="5" /><text x="302" y="297" fill="#f5f1e8" font-size="11">Bengaluru</text>
+            <circle class="node" cx="320" cy="170" r="5" /><text x="332" y="166" fill="#f5f1e8" font-size="11">Delhi</text>
+            <circle class="node" cx="390" cy="300" r="5" /><text x="402" y="296" fill="#f5f1e8" font-size="11">Chennai</text>
+            <circle class="node" cx="430" cy="245" r="5" /><text x="442" y="241" fill="#f5f1e8" font-size="11">Hyderabad</text>
+            <circle class="node" cx="160" cy="280" r="5" /><text x="172" y="276" fill="#f5f1e8" font-size="11">Ahmedabad</text>
+          </g>
+        </svg>
+      </div>
     </div>
+  </section>
 
-    <div id="india-view" class="content-view hidden">
-        <div id="india-container" class="news-grid"></div>
+  <div class="trust-bar">
+    <div class="container"><p>Insights across: Technology · AI · Startups · Consumer Trends · Economy · Behaviour</p></div>
+  </div>
+
+  <section id="insights">
+    <div class="container">
+      <h2 class="section-title">Featured Insights</h2>
+      <div class="cards-3">
+        <article class="card">
+          <div class="label">Intelligence Briefing</div>
+          <h3>Why India’s Tier-2 Consumer Economy Is Exploding</h3>
+        </article>
+        <article class="card">
+          <div class="label">Intelligence Briefing</div>
+          <h3>The Rise of AI Infrastructure in India</h3>
+        </article>
+        <article class="card">
+          <div class="label">Intelligence Briefing</div>
+          <h3>How Indian Consumer Behaviour Is Changing in 2026</h3>
+        </article>
+      </div>
     </div>
+  </section>
 
-    <div id="global-view" class="content-view hidden">
-        <div id="global-container" class="news-grid"></div>
+  <section class="viz-strip">
+    <div class="container">
+      <h2 class="section-title">Better Data.<br/>Better Decisions.<br/>Better India.</h2>
     </div>
+  </section>
 
-    <div id="overlay" onclick="closePanel()"></div>
-    <aside id="breakdown-panel">
-        <div class="close-btn" onclick="closePanel()">← Close</div>
-        <div class="panel-content" id="panel-data">
-            </div>
-    </aside>
+  <section id="reports">
+    <div class="container why-grid">
+      <div class="why-statement">Most data platforms report information. We focus on clarity.</div>
+      <div class="principles">
+        <div class="principle"><strong>01 — Contextual Intelligence</strong><p>We connect signals, patterns, and implications.</p></div>
+        <div class="principle"><strong>02 — India-First Thinking</strong><p>Built around India’s unique realities.</p></div>
+        <div class="principle"><strong>03 — Insight Over Noise</strong><p>Focused on meaningful interpretation, not content overload.</p></div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-        let allData = [];
+  <section>
+    <div class="container">
+      <div class="signature">
+        <div class="label">Signature Insight</div>
+        <h3>India Is Not One Market. It’s 20 Different Realities.</h3>
+        <a href="#">Read Full Analysis →</a>
+      </div>
+    </div>
+  </section>
 
-        async function init() {
-            try {
-                // Append a timestamp to avoid browser caching issues when updating data
-                const response = await fetch('data.json?v=' + Date.now());
-                allData = await response.json();
-                renderReports();
-                renderNews('india');
-                renderNews('global');
-            } catch (e) { 
-                console.error("Data load failed", e);
-                document.getElementById('reports-container').innerHTML = '<div style="color:var(--text-dim);">Unable to fetch latest intelligence.</div>';
-            }
-        }
+  <section id="categories">
+    <div class="container">
+      <h2 class="section-title">Explore by Category</h2>
+      <div class="category-grid">
+        <div class="category">AI</div>
+        <div class="category">Startups</div>
+        <div class="category">Economy</div>
+        <div class="category">Consumer Trends</div>
+        <div class="category">Behaviour</div>
+        <div class="category">Infrastructure</div>
+        <div class="category">Digital India</div>
+      </div>
+    </div>
+  </section>
 
-        function switchTab(tab) {
-            // UI Toggle
-            document.querySelectorAll('.content-view').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`${tab}-view`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).classList.add('active');
+  <section id="contact">
+    <div class="container newsletter">
+      <h2 class="section-title">Get India’s most meaningful insights.</h2>
+      <p>Weekly intelligence on markets, technology, growth, and behaviour.</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Email address" aria-label="Email address" />
+        <button class="btn btn-primary" type="button">Join Community</button>
+      </form>
+    </div>
+  </section>
 
-            // Header Update
-            const titles = {
-                reports: ["Original<br>Investigations.", "In-depth editorial analysis from the AOI newsroom."],
-                india: ["Local<br>Intelligence.", "The latest critical updates from across the subcontinent."],
-                global: ["World<br>Dynamics.", "Mapping international shifts and global narratives."]
-            };
-            document.getElementById('view-title').innerHTML = titles[tab][0];
-            document.getElementById('view-desc').innerText = titles[tab][1];
-            window.scrollTo(0,0);
-        }
-
-        function renderReports() {
-            const container = document.getElementById('reports-container');
-            const reports = allData.filter(i => i.type === 'report');
-            container.innerHTML = reports.map(r => `
-                <article class="report-card">
-                    <h2>${r.title}</h2>
-                    <div class="panel-text" style="white-space: pre-wrap;">${r.body}</div>
-                </article>
-            `).join('');
-        }
-
-        function renderNews(region) {
-            const container = document.getElementById(`${region}-container`);
-            const news = allData.filter(i => i.type === 'news' && i.region === region);
-            container.innerHTML = news.map((item, index) => `
-                <div class="news-card" onclick="openBreakdown('${region}', ${index})">
-                    <div class="source">${item.source || 'News Wire'}</div>
-                    <h3>${item.title}</h3>
-                    <p>${item.summary.replace(/&nbsp;/g, ' ')}</p>
-                </div>
-            `).join('');
-        }
-
-        function openBreakdown(region, index) {
-            const items = allData.filter(i => i.type === 'news' && i.region === region);
-            const item = items[index];
-            
-            const panel = document.getElementById('panel-data');
-            panel.innerHTML = `
-                <div class="panel-label">Intelligence Breakdown</div>
-                <h2>${item.title}</h2>
-                
-                <div class="panel-label">Summary</div>
-                <div class="panel-text">${item.summary.replace(/&nbsp;/g, ' ')}</div>
-                
-                <div class="panel-label">Contextual Analysis</div>
-                <div class="panel-text">This event aligns with broader shifts in regional policy. Our intelligence suggests a move toward increased strategic positioning in this sector.</div>
-                
-                <div class="panel-label">Bias Monitor</div>
-                <div class="panel-text">Reporting on this topic currently shows a 12% leaning toward sensationalism in mainstream outlets. AOI maintains a neutral posture.</div>
-
-                <a href="${item.link}" target="_blank" class="panel-link">View Original Source →</a>
-            `;
-            
-            document.getElementById('breakdown-panel').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePanel() {
-            document.getElementById('breakdown-panel').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        init();
-    </script>
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-links">
+          <a href="#">About</a><a href="#insights">Insights</a><a href="#reports">Reports</a><a href="#contact">Contact</a><a href="#">LinkedIn</a>
+        </div>
+      </div>
+      <div class="footer-tag">Insights. Data. Impact.</div>
+    </div>
+  </footer>
 </body>
 </html>
