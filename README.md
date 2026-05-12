@@ -107,20 +107,3 @@ git push
 ```
 
 After push, GitHub PR should become mergeable.
-
-
-### Conflict decision matrix (quick answer)
-
-If conflicts are from the old AI branch vs the new RSS branch, use:
-
-- `update_news.py` → **Accept current change**
-- `requirements.txt` → **Accept current change**
-- `README.md` → **Accept current change**
-- `index.html` (if it conflicts) → **Accept current change**
-- `.github/workflows/update_news.yml` (if it conflicts) → **Accept current change**
-- `data.json` (if it conflicts) → **Accept both changes**, then run `python update_news.py` and commit the regenerated file
-
-Reason: we want to keep the RSS/no-AI architecture and only refresh generated news snapshot afterwards.
-
-
-For a dedicated troubleshooting walkthrough, see `RESOLVE_BRANCH_UPDATE.md`.
