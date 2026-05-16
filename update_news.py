@@ -11,7 +11,6 @@ import google.generativeai as genai
 INDIA_TOP_STORIES_RSS = "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en"
 GLOBAL_TOP_STORIES_RSS = "https://news.google.com/rss/headlines/section/topic/WORLD?hl=en-US&gl=US&ceid=US:en"
 
-# Setup Gemini API
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -26,7 +25,12 @@ def clean_html(text):
 def get_user_reports():
     reports = []
     if not os.path.exists("reports"): return reports
-    for file_path in sorted(glob.glob("reports/*.txt")):
+    
+    # SORT BY NEWEST FILE FIRST
+    report_files = glob.glob("reports/*.txt")
+    report_files.sort(key=os.path.getmtime, reverse=True) 
+
+    for file_path in report_files:
         try:
             with open(file_path, "r", encoding="utf-8") as file:
                 content = file.read().strip()
@@ -41,7 +45,6 @@ def get_user_reports():
     return reports
 
 def analyze_with_ai(title, summary):
-    # Fallback if Gemini isn't working
     fallback = {"bias": "Pending AI Analysis.", "sources": "Original publisher.", "effect": "Impact being calculated."}
     if not model: return fallback
     
@@ -80,10 +83,9 @@ def parse_rss_items(feed_xml, region, max_items):
         if not title or not link or title in seen_titles: continue
         seen_titles.add(title)
 
-        # Let Gemini analyze the article
         print(f"Analyzing: {title[:30]}...")
         ai_data = analyze_with_ai(title, description)
-        time.sleep(2) # Pause briefly so we don't overload the Gemini API limit
+        time.sleep(2) 
 
         items.append({
             "type": "news",
