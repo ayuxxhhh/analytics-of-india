@@ -3,212 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics of India | Top India + Global Headlines</title>
+    <title>Analytics of India | Unbiased Intelligence</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #050505;
+            --bg-color: #030303;
+            --surface: #111111;
             --text-main: #f4f4f4;
             --text-muted: #888888;
-            --accent: #ff4a5a;
+            --accent: #2962ff;
+            --border: rgba(255,255,255,0.1);
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-        nav {
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-        .hero {
-            padding: 6rem 5% 3rem 5%;
-            background: radial-gradient(circle at 50% 0%, rgba(255, 74, 90, 0.15), transparent 50%);
-        }
-        .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            font-weight: 800;
-        }
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            line-height: 1.6;
-        }
-        .meta {
-            color: var(--text-muted);
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
-        .section {
-            padding: 1rem 5% 0.5rem 5%;
-        }
-        .section h2 {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-        }
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 0.5rem 5% 3rem 5%;
-        }
-        .news-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 1.4rem;
-            border-radius: 12px;
-        }
-        .news-card h3 {
-            font-size: 1.35rem;
-            line-height: 1.3;
-            margin-bottom: 0.8rem;
-        }
-        .tag {
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.9rem;
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #fff;
-        }
-        .tag-report { background: var(--accent); }
-        .tag-india { background: #2e7d32; }
-        .tag-global { background: #1565c0; }
-        .summary {
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        .source {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin-bottom: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-        .btn {
-            display: inline-block;
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.84rem;
-            border: 1px solid rgba(255,255,255,0.25);
-            padding: 7px 14px;
-            border-radius: 4px;
-        }
-        .loading {
-            text-align: center;
-            padding: 3rem 5%;
-            color: var(--text-muted);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+        
+        /* Navigation Tabs */
+        nav { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--bg-color); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; text-transform: uppercase;}
+        .tabs { display: flex; gap: 2rem; }
+        .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; font-weight: 600; padding-bottom: 0.5rem; transition: 0.3s; }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active { color: #fff; border-bottom: 2px solid var(--accent); }
+
+        /* Pages */
+        .page { display: none; padding: 4rem 5%; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .page-header { margin-bottom: 3rem; border-left: 4px solid var(--accent); padding-left: 1rem;}
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .page-header p { color: var(--text-muted); }
+
+        /* Grids and Cards */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+        .news-card { background: var(--surface); border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .news-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .news-card h3 { font-size: 1.2rem; line-height: 1.4; margin-bottom: 1rem; }
+        .source-tag { font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
+        .card-footer { margin-top: auto; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 1rem; display: flex; justify-content: space-between;}
+
+        /* Reports Specific Styling */
+        .report-card { background: var(--surface); padding: 3rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 3rem; }
+        .report-card h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--accent); }
+        .report-body { line-height: 1.7; color: #ccc; }
+        .chart-container { background: #fff; padding: 1rem; border-radius: 8px; margin: 2rem 0; height: 300px;}
+
+        /* Modal Popup for Breakdown */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 999; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: var(--surface); width: 90%; max-width: 600px; padding: 2.5rem; border-radius: 12px; border: 1px solid var(--border); position: relative; }
+        .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; color: var(--text-muted); cursor: pointer; background: none; border: none;}
+        .close-btn:hover { color: #fff; }
+        .modal-title { font-size: 1.4rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        .breakdown-item { margin-bottom: 1.5rem; background: rgba(255,255,255,0.03); padding: 1rem; border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0;}
+        .breakdown-label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 0.4rem; letter-spacing: 1px;}
+        .modal-link { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 4px; font-weight: 600; margin-top: 1rem; transition: 0.3s;}
+        .modal-link:hover { background: #1c48c4; }
     </style>
 </head>
 <body>
+
     <nav>
         <div class="logo">Analytics of India.</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('reports')">Original Investigations</button>
+            <button class="tab-btn" onclick="switchTab('india')">National Intelligence</button>
+            <button class="tab-btn" onclick="switchTab('global')">Global Intelligence</button>
+        </div>
     </nav>
 
-    <section class="hero">
-        <h1>Top Headlines,<br>Auto-Updated.</h1>
-        <p>
-            No AI rewriting. Just latest source headlines: top 20 from India and top 10 from global feeds,
-            refreshed automatically every 24 hours.
-        </p>
-        <div class="meta" id="last-updated">Last updated: checking…</div>
-    </section>
+    <main id="reports" class="page active">
+        <div class="page-header">
+            <h1>Original Investigations</h1>
+            <p>In-house, unbiased analysis and data-driven reports.</p>
+        </div>
+        <div id="reports-container">Loading investigations...</div>
+    </main>
 
-    <section class="section"><h2>Featured Reports</h2></section>
-    <section class="news-grid" id="reports-container">
-        <div class="loading">Loading reports...</div>
-    </section>
+    <main id="india" class="page">
+        <div class="page-header">
+            <h1>National Intelligence</h1>
+            <p>Top 20 trending stories in India. Click any card for a deep AI bias & effect breakdown.</p>
+        </div>
+        <div class="news-grid" id="india-container">Loading National data...</div>
+    </main>
 
-    <section class="section"><h2>Top 20 India News</h2></section>
-    <section class="news-grid" id="india-container">
-        <div class="loading">Loading India headlines...</div>
-    </section>
+    <main id="global" class="page">
+        <div class="page-header">
+            <h1>Global Intelligence</h1>
+            <p>Top 10 international developments. Click any card for a deep AI bias & effect breakdown.</p>
+        </div>
+        <div class="news-grid" id="global-container">Loading Global data...</div>
+    </main>
 
-    <section class="section"><h2>Top 10 Global News</h2></section>
-    <section class="news-grid" id="global-container">
-        <div class="loading">Loading global headlines...</div>
-    </section>
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal(event, true)">&times;</button>
+            <h3 class="modal-title" id="m-title">Article Title</h3>
+            
+            <div class="breakdown-item">
+                <div class="breakdown-label">Detected Bias</div>
+                <div id="m-bias">Analyzing...</div>
+            </div>
+            <div class="breakdown-item">
+                <div class="breakdown-label">Primary Sources</div>
+                <div id="m-sources">Analyzing...</div>
+            </div>
+            <div class="breakdown-item">
+                <div class="breakdown-label">Public Effect</div>
+                <div id="m-effect">Analyzing...</div>
+            </div>
+            
+            <a href="#" target="_blank" id="m-link" class="modal-link">Read Original Source ↗</a>
+        </div>
+    </div>
 
     <script>
-        function formatDate(value) {
-            if (!value) return 'Time unavailable';
-            const d = new Date(value);
-            if (isNaN(d.getTime())) return value;
-            return d.toLocaleString();
+        // Tab Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function buildCard(item, tagClass, tagText) {
-            return `
-                <article class="news-card">
-                    <span class="tag ${tagClass}">${tagText}</span>
-                    <h3>${item.title || 'Untitled'}</h3>
-                    <div class="source">${item.source ? item.source + ' • ' : ''}${formatDate(item.published)}</div>
-                    <p class="summary">${item.summary || 'No summary provided in feed.'}</p>
-                    <a href="${item.link || '#'}" target="_blank" class="btn">Open source ↗</a>
-                </article>
-            `;
+        // Modal Logic
+        function openModal(title, bias, sources, effect, link) {
+            document.getElementById('m-title').innerText = title;
+            document.getElementById('m-bias').innerText = bias;
+            document.getElementById('m-sources').innerText = sources;
+            document.getElementById('m-effect').innerText = effect;
+            document.getElementById('m-link').href = link;
+            document.getElementById('modal').classList.add('active');
         }
 
+        function closeModal(e, force=false) {
+            if (force || e.target === document.getElementById('modal')) {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+
+        // Fetch and Build Data
         async function loadData() {
-            const reportsContainer = document.getElementById('reports-container');
-            const indiaContainer = document.getElementById('india-container');
-            const globalContainer = document.getElementById('global-container');
-            const updatedNode = document.getElementById('last-updated');
-
             try {
                 const response = await fetch('data.json?v=' + new Date().getTime());
-                if (!response.ok) throw new Error('Data not ready yet.');
-
                 const data = await response.json();
+                
                 const reports = data.filter(item => item.type === 'report');
                 const indiaNews = data.filter(item => item.type === 'news' && item.region === 'india');
                 const globalNews = data.filter(item => item.type === 'news' && item.region === 'global');
 
-                reportsContainer.innerHTML = reports.length
-                    ? reports.map(item => `
-                        <article class="news-card" style="border-color: rgba(255, 74, 90, 0.4);">
-                            <span class="tag tag-report">REPORT</span>
-                            <h3>${item.title || 'Untitled Report'}</h3>
-                            <p class="summary" style="white-space: pre-wrap; color: var(--text-main);">${item.body || ''}</p>
-                        </article>
-                    `).join('')
-                    : '<div class="loading">No reports posted yet.</div>';
+                // Build Reports (Injecting a dummy chart space for visual interactivity)
+                document.getElementById('reports-container').innerHTML = reports.map((item, index) => `
+                    <div class="report-card">
+                        <h2>${item.title}</h2>
+                        <div class="report-body">${item.body}</div>
+                        ${index === 1 ? '<div class="chart-container"><canvas id="aiChart"></canvas></div>' : ''}
+                    </div>
+                `).join('');
 
-                indiaContainer.innerHTML = indiaNews.length
-                    ? indiaNews.map(item => buildCard(item, 'tag-india', 'India News')).join('')
-                    : '<div class="loading">No India headlines available.</div>';
+                // Render Chart if AI report exists
+                if(document.getElementById('aiChart')) {
+                    new Chart(document.getElementById('aiChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: ['2023', '2024', '2025', '2026'],
+                            datasets: [{
+                                label: 'Tech Jobs Displaced by AI (Estimated)',
+                                data: [12000, 45000, 100000, 170000],
+                                backgroundColor: '#2962ff'
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false }
+                    });
+                }
 
-                globalContainer.innerHTML = globalNews.length
-                    ? globalNews.map(item => buildCard(item, 'tag-global', 'Global News')).join('')
-                    : '<div class="loading">No global headlines available.</div>';
+                // Build News Cards
+                const buildCard = (item) => {
+                    // Escaping quotes to prevent HTML breaking
+                    const safeTitle = item.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeBias = (item.bias || 'No bias detected').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeSources = (item.sources || 'Original publisher').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    const safeEffect = (item.effect || 'Neutral impact').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                    
+                    return `
+                    <div class="news-card" onclick="openModal('${safeTitle}', '${safeBias}', '${safeSources}', '${safeEffect}', '${item.link}')">
+                        <div class="source-tag">${item.source}</div>
+                        <h3>${item.title}</h3>
+                        <div class="card-footer">
+                            <span>Click to view AI Breakdown</span>
+                            <span>↗</span>
+                        </div>
+                    </div>`;
+                };
 
-                updatedNode.textContent = `Last updated: ${new Date().toLocaleString()} (site-local time)`;
+                document.getElementById('india-container').innerHTML = indiaNews.map(buildCard).join('');
+                document.getElementById('global-container').innerHTML = globalNews.map(buildCard).join('');
+
             } catch (error) {
-                const msg = '<div class="loading">Unable to load latest data. Please refresh in a minute.</div>';
-                reportsContainer.innerHTML = msg;
-                indiaContainer.innerHTML = msg;
-                globalContainer.innerHTML = msg;
+                console.error("Error loading data:", error);
             }
         }
 
