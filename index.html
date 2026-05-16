@@ -8,148 +8,96 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #050505;
-            --bg-surface: #0f0f0f;
-            --bg-glass: rgba(255, 255, 255, 0.03);
+            --bg-base: #030303;
+            --bg-surface: #0a0a0a;
+            --bg-glass: rgba(255, 255, 255, 0.02);
             --text-primary: #ffffff;
             --text-secondary: #8a8a8a;
-            --accent: #d4af37; /* Elegant muted gold/bronze for authority */
-            --border: rgba(255, 255, 255, 0.06);
-            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --accent: #d4af37; 
+            --border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: var(--bg-base); 
-            color: var(--text-primary); 
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+        body { background-color: var(--bg-base); color: var(--text-primary); font-family: 'Inter', sans-serif; overflow-x: hidden; line-height: 1.6; }
 
-        /* Scroll Reveal Animations */
+        /* Typography & Utils */
+        h1, h2, h3, .editorial-text { font-family: 'Playfair Display', serif; font-weight: 400; }
         .reveal { opacity: 0; transform: translateY(30px); transition: var(--transition); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Typography */
-        h1, h2, .editorial-text { font-family: 'Playfair Display', serif; }
         
         /* Navigation */
-        nav { 
-            padding: 2rem 5%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--border);
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 100;
-        }
+        nav { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(3, 3, 3, 0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
         .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
         .tabs { display: flex; gap: 3rem; }
-        .tab-btn { 
-            background: none; border: none; color: var(--text-secondary); 
-            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; font-weight: 600; padding-bottom: 0.5rem; 
-            position: relative; transition: var(--transition);
-        }
-        .tab-btn::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px;
-            background: var(--accent); transition: var(--transition);
-        }
-        .tab-btn:hover { color: var(--text-primary); }
-        .tab-btn.active { color: var(--text-primary); }
+        .tab-btn { background: none; border: none; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-weight: 600; padding-bottom: 0.5rem; position: relative; transition: var(--transition); }
+        .tab-btn::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--accent); transition: var(--transition); }
+        .tab-btn:hover, .tab-btn.active { color: var(--text-primary); }
         .tab-btn.active::after { width: 100%; }
 
         /* Page Layouts */
-        .page { display: none; padding: 6rem 5%; min-height: 100vh; }
-        .page.active { display: block; animation: smoothFade 0.8s ease forwards; }
+        .page { display: none; padding: 5rem 5%; min-height: 100vh; }
+        .page.active { display: block; animation: smoothFade 0.6s ease forwards; }
         @keyframes smoothFade { from { opacity: 0; } to { opacity: 1; } }
 
         .section-header { margin-bottom: 4rem; max-width: 800px; }
-        .section-header h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; font-weight: 400; }
+        .section-header h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; }
         .section-header p { color: var(--text-secondary); font-size: 1.1rem; }
 
-        /* Featured Report Hero */
-        .featured-report {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 1px;
-            padding: 4rem;
-            margin-bottom: 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .featured-label {
-            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px;
-            color: var(--accent); margin-bottom: 1.5rem; display: block; font-weight: 600;
-        }
-        .featured-report h2 { font-size: 3rem; margin-bottom: 2rem; max-width: 900px; line-height: 1.2; }
-        .report-content { color: #cccccc; font-size: 1.1rem; max-width: 800px; margin-bottom: 3rem; }
+        /* REPORTS GRID */
+        .reports-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; }
         
-        /* Chart Container */
-        .chart-wrapper {
-            background: #0a0a0a; border: 1px solid var(--border);
-            padding: 2rem; border-radius: 4px; height: 400px; max-width: 1000px;
-            margin-top: 3rem;
-        }
+        .report-card { background: var(--bg-surface); border: 1px solid var(--border); padding: 3rem; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;}
+        .report-card:hover { border-color: rgba(212, 175, 55, 0.5); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); background: #111;}
+        
+        .report-hero { grid-column: span 12; padding: 5rem; min-height: 500px; background: linear-gradient(180deg, rgba(20,20,20,1) 0%, rgba(5,5,5,1) 100%); border-top: 2px solid var(--accent); }
+        .report-hero h2 { font-size: 3.5rem; margin-bottom: 1.5rem; max-width: 900px; line-height: 1.2; }
+        .report-standard { grid-column: span 6; min-height: 350px;}
+        @media (max-width: 900px) { .report-standard { grid-column: span 12; } .report-hero { padding: 3rem; } .report-hero h2 { font-size: 2.5rem;} }
+        
+        .report-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 1.5rem; display: block; font-weight: 600; }
+        .report-preview { color: var(--text-secondary); font-size: 1.1rem; max-width: 800px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .report-hero .report-preview { -webkit-line-clamp: 5; font-size: 1.25rem; }
+        
+        .read-btn { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 2rem; color: #fff; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; opacity: 0.7; transition: var(--transition);}
+        .report-card:hover .read-btn { opacity: 1; color: var(--accent); gap: 1rem;}
 
-        /* Archives Grid */
-        .archive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem;}
-        .archive-card {
-            background: var(--bg-glass); padding: 2.5rem; border: 1px solid var(--border);
-            cursor: pointer; transition: var(--transition);
-        }
-        .archive-card:hover { background: rgba(255,255,255,0.06); border-color: var(--accent); transform: translateY(-5px);}
-        .archive-card h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1rem; font-weight: 400;}
-
-        /* News Intelligence Grid */
+        /* INTELLIGENCE GRID */
         .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; }
-        .news-card { 
-            background: var(--bg-surface); border: 1px solid var(--border); padding: 2rem; 
-            cursor: pointer; transition: var(--transition); display: flex; flex-direction: column; 
-            position: relative; overflow: hidden;
-        }
-        .news-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0%;
-            background: var(--accent); transition: var(--transition);
-        }
-        .news-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .news-card { background: var(--bg-surface); border: 1px solid var(--border); padding: 2rem; cursor: pointer; transition: var(--transition); display: flex; flex-direction: column; position: relative; }
+        .news-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0%; background: var(--accent); transition: var(--transition); }
+        .news-card:hover { transform: translateY(-5px); }
         .news-card:hover::before { height: 100%; }
-        
         .source-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 1rem; display: block;}
-        .news-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.5; }
-        .card-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 0.8rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;}
+        .news-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.5; font-family: 'Inter', sans-serif;}
+        .card-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;}
 
-        /* Modal / Intelligence Breakdown */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); 
-            display: flex; justify-content: center; align-items: center; 
-            z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-        }
+        /* FULLSCREEN REPORT MODAL */
+        .report-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-base); z-index: 2000; overflow-y: auto; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; padding: 0;}
+        .report-modal.active { opacity: 1; pointer-events: all; }
+        
+        .report-modal-header { padding: 2rem 5%; display: flex; justify-content: flex-end; position: sticky; top: 0; background: linear-gradient(180deg, rgba(3,3,3,1) 0%, rgba(3,3,3,0) 100%); z-index: 2001;}
+        .close-report { background: none; border: 1px solid var(--border); color: #fff; padding: 0.8rem 2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 40px; backdrop-filter: blur(5px); transition: var(--transition);}
+        .close-report:hover { background: #fff; color: #000; }
+        
+        .report-modal-content { max-width: 900px; margin: 0 auto; padding: 2rem 5% 8rem 5%; }
+        .report-modal-title { font-size: 4rem; line-height: 1.1; margin-bottom: 3rem; color: #fff; }
+        .report-modal-body { font-size: 1.25rem; color: #d0d0d0; line-height: 1.8; font-family: 'Playfair Display', serif;}
+        
+        .modal-chart-container { background: var(--bg-surface); border: 1px solid var(--border); padding: 2rem; margin: 3rem 0; height: 400px; border-radius: 4px;}
+
+        /* SMALL NEWS MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
-        .modal-content { 
-            background: var(--bg-surface); width: 90%; max-width: 700px; 
-            padding: 4rem; border: 1px solid var(--border); position: relative;
-            transform: translateY(20px); transition: transform 0.4s ease;
-        }
+        .modal-content { background: var(--bg-surface); width: 90%; max-width: 600px; padding: 3rem; border: 1px solid var(--border); position: relative; transform: translateY(20px); transition: transform 0.4s ease; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        
-        .close-btn { position: absolute; top: 1.5rem; right: 2rem; font-size: 2rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; font-weight: 300;}
+        .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; color: var(--text-secondary); cursor: pointer; background: none; border: none; font-weight: 300;}
         .close-btn:hover { color: #fff; }
-        .modal-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 3rem; font-weight: 400; line-height: 1.3;}
-        
-        .analysis-block { margin-bottom: 2rem; }
-        .analysis-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 0.5rem; }
-        .analysis-text { font-size: 1rem; color: #ddd; line-height: 1.6; padding-left: 1rem; border-left: 1px solid var(--border);}
-        
-        .modal-link { 
-            display: inline-block; margin-top: 2rem; color: var(--bg-base); background: var(--text-primary); 
-            text-decoration: none; padding: 1rem 2rem; font-size: 0.8rem; text-transform: uppercase; 
-            letter-spacing: 1px; font-weight: 600; transition: var(--transition);
-        }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 2rem; line-height: 1.3;}
+        .analysis-block { margin-bottom: 1.5rem; padding-left: 1rem; border-left: 1px solid var(--accent); }
+        .analysis-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .analysis-text { font-size: 0.95rem; color: #fff; line-height: 1.5; }
+        .modal-link { display: inline-block; margin-top: 2rem; color: var(--bg-base); background: var(--text-primary); text-decoration: none; padding: 0.8rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; transition: var(--transition); }
         .modal-link:hover { background: var(--accent); }
 
     </style>
@@ -168,19 +116,15 @@
     <main id="reports" class="page active">
         <div class="section-header reveal">
             <h1>Original Investigations</h1>
-            <p>Unbiased, data-driven analysis tracking systemic shifts in economics, technology, and governance.</p>
+            <p>Unbiased, data-driven analysis tracking systemic shifts. The latest intelligence automatically prioritizes at the top.</p>
         </div>
-        
-        <div id="featured-report-container" class="reveal"></div>
-        
-        <h3 class="reveal" style="font-family: 'Playfair Display', serif; font-size: 2rem; margin: 4rem 0 2rem 0; font-weight: 400;">From the Archives</h3>
-        <div id="archive-container" class="archive-grid reveal"></div>
+        <div id="reports-container" class="reports-grid reveal"></div>
     </main>
 
     <main id="india" class="page">
         <div class="section-header reveal">
             <h1>National Intelligence</h1>
-            <p>Real-time tracking of the top 20 developments shaping India. Click any card to bypass media narratives and view the raw AI bias and effect breakdown.</p>
+            <p>Real-time tracking of the top 20 developments shaping India.</p>
         </div>
         <div class="news-grid" id="india-container"></div>
     </main>
@@ -188,73 +132,126 @@
     <main id="global" class="page">
         <div class="section-header reveal">
             <h1>Global Intelligence</h1>
-            <p>The geopolitical and macroeconomic events driving the international dialogue. Analyzed for bias and public impact.</p>
+            <p>The geopolitical and macroeconomic events driving the international dialogue.</p>
         </div>
         <div class="news-grid" id="global-container"></div>
     </main>
 
-    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="report-modal" id="report-modal">
+        <div class="report-modal-header">
+            <button class="close-report" onclick="closeReport()">Close Report</button>
+        </div>
+        <div class="report-modal-content">
+            <h1 class="report-modal-title" id="r-title"></h1>
+            <div id="dynamic-chart-area"></div>
+            <div class="report-modal-body" id="r-body"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal" onclick="closeNewsModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeModal(event, true)">×</button>
+            <button class="close-btn" onclick="closeNewsModal(event, true)">×</button>
             <h3 class="modal-title" id="m-title"></h3>
             
             <div class="analysis-block">
-                <div class="analysis-label">Systemic Bias Detection</div>
+                <div class="analysis-label">Systemic Bias</div>
                 <div class="analysis-text" id="m-bias"></div>
             </div>
             <div class="analysis-block">
-                <div class="analysis-label">Primary Source Vectors</div>
+                <div class="analysis-label">Source Vectors</div>
                 <div class="analysis-text" id="m-sources"></div>
             </div>
             <div class="analysis-block">
-                <div class="analysis-label">Macro Public Effect</div>
+                <div class="analysis-label">Macro Effect</div>
                 <div class="analysis-text" id="m-effect"></div>
             </div>
-            
-            <a href="#" target="_blank" id="m-link" class="modal-link">Verify Original Source →</a>
+            <a href="#" target="_blank" id="m-link" class="modal-link">Verify Source →</a>
         </div>
     </div>
 
     <script>
-        // --- Scroll Observer for Animations ---
+        // --- Scroll Observer ---
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
 
-        // --- Tab Management ---
+        // --- Tabs ---
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
-            
-            // Re-trigger scroll animations on tab switch
             document.querySelectorAll('.reveal').forEach(el => {
                 el.classList.remove('active');
                 setTimeout(() => observer.observe(el), 50);
             });
         }
 
-        // --- Modal Management ---
-        function openModal(title, bias, sources, effect, link) {
-            document.getElementById('m-title').innerText = title;
-            document.getElementById('m-bias').innerText = bias;
-            document.getElementById('m-sources').innerText = sources;
-            document.getElementById('m-effect').innerText = effect;
+        // --- News Modal ---
+        function openNewsModal(title, bias, sources, effect, link) {
+            document.getElementById('m-title').innerText = decodeURIComponent(title);
+            document.getElementById('m-bias').innerText = decodeURIComponent(bias);
+            document.getElementById('m-sources').innerText = decodeURIComponent(sources);
+            document.getElementById('m-effect').innerText = decodeURIComponent(effect);
             document.getElementById('m-link').href = link;
             document.getElementById('modal').classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.body.style.overflow = 'hidden';
         }
-
-        function closeModal(e, force=false) {
+        function closeNewsModal(e, force=false) {
             if (force || e.target === document.getElementById('modal')) {
                 document.getElementById('modal').classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
+        }
+
+        // --- Report Modal & Chart Generator ---
+        let currentChart = null;
+
+        function openReport(encodedTitle, encodedBody) {
+            const title = decodeURIComponent(encodedTitle);
+            const body = decodeURIComponent(encodedBody).replace(/\n/g, '<br><br>');
+            
+            document.getElementById('r-title').innerText = title;
+            document.getElementById('r-body').innerHTML = body;
+            
+            const chartArea = document.getElementById('dynamic-chart-area');
+            chartArea.innerHTML = ''; // Clear old chart
+            if(currentChart) { currentChart.destroy(); } // Destroy old chart instance
+
+            // Inject Custom Charts based on Report Content
+            if (title.toLowerCase().includes('ai') || title.toLowerCase().includes('jobs')) {
+                chartArea.innerHTML = '<div class="modal-chart-container"><canvas id="reportChart"></canvas></div>';
+                const ctx = document.getElementById('reportChart').getContext('2d');
+                Chart.defaults.color = '#8a8a8a';
+                currentChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Q1 2025', 'Q3 2025', 'Q1 2026', 'Q2 2026'],
+                        datasets: [{ label: 'Tech Job Displacements', data: [54800, 89000, 124000, 170000], borderColor: '#d4af37', backgroundColor: 'rgba(212, 175, 55, 0.1)', fill: true, tension: 0.4 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } else if (title.toLowerCase().includes('79')) {
+                chartArea.innerHTML = '<div class="modal-chart-container"><canvas id="reportChart"></canvas></div>';
+                const ctx = document.getElementById('reportChart').getContext('2d');
+                Chart.defaults.color = '#8a8a8a';
+                currentChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['GDP Rank', 'IT Exports Rank', 'Per Capita Rank', 'Air Quality Rank'],
+                        datasets: [{ label: 'Global Ranking (Lower bar is better)', data: [4, 1, 149, 3], backgroundColor: ['#d4af37', '#d4af37', '#333333', '#8b0000'] }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            document.getElementById('report-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReport() {
+            document.getElementById('report-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
         // --- Data Architecture ---
@@ -263,117 +260,53 @@
                 const response = await fetch('data.json?v=' + new Date().getTime());
                 const data = await response.json();
                 
-                // Sort Reports: Newest First (Reversing the array)
-                const reports = data.filter(item => item.type === 'report').reverse();
+                // The python script now puts the newest report first automatically!
+                const reports = data.filter(item => item.type === 'report');
                 const indiaNews = data.filter(item => item.type === 'news' && item.region === 'india');
                 const globalNews = data.filter(item => item.type === 'news' && item.region === 'global');
 
-                // 1. Build Reports Architecture
-                if (reports.length > 0) {
-                    const featured = reports[0];
-                    const archives = reports.slice(1);
+                // Build Reports Grid
+                document.getElementById('reports-container').innerHTML = reports.map((item, index) => {
+                    const isHero = index === 0;
+                    const cardClass = isHero ? 'report-hero' : 'report-standard';
+                    const badge = isHero ? 'LATEST INVESTIGATION' : 'ARCHIVED DOSSIER';
+                    
+                    // Safely encode for Javascript onClick passing
+                    const encTitle = encodeURIComponent(item.title);
+                    const encBody = encodeURIComponent(item.body);
 
-                    // Determine if we should inject the AI chart based on the title
-                    let chartHTML = '';
-                    if (featured.title.toLowerCase().includes('ai') || featured.title.toLowerCase().includes('tech jobs')) {
-                        chartHTML = '<div class="chart-wrapper"><canvas id="featuredChart"></canvas></div>';
-                    } else if (featured.title.toLowerCase().includes('79')) {
-                         chartHTML = '<div class="chart-wrapper"><canvas id="featuredChart"></canvas></div>';
-                    }
-
-                    document.getElementById('featured-report-container').innerHTML = `
-                        <article class="featured-report">
-                            <span class="featured-label">Latest Briefing</span>
-                            <h2>${featured.title}</h2>
-                            <div class="report-content">${featured.body}</div>
-                            ${chartHTML}
-                        </article>
-                    `;
-
-                    // Render Dynamic Chart
-                    if (document.getElementById('featuredChart')) {
-                        const ctx = document.getElementById('featuredChart').getContext('2d');
-                        
-                        // Chart logic for AI Report
-                        if(featured.title.toLowerCase().includes('ai')) {
-                            Chart.defaults.color = '#8a8a8a';
-                            Chart.defaults.font.family = 'Inter';
-                            new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: ['Q1 2025', 'Q3 2025', 'Q1 2026', 'Q2 2026'],
-                                    datasets: [{
-                                        label: 'Cumulative AI-Driven Job Displacements',
-                                        data: [54800, 89000, 124000, 170000],
-                                        borderColor: '#d4af37',
-                                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
-                                        borderWidth: 3,
-                                        fill: true,
-                                        tension: 0.4
-                                    }]
-                                },
-                                options: { 
-                                    responsive: true, maintainAspectRatio: false,
-                                    plugins: { legend: { position: 'top' } },
-                                    scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { color: 'rgba(255,255,255,0.05)' } } }
-                                }
-                            });
-                        } 
-                        // Chart logic for 79 Year Report
-                        else if (featured.title.toLowerCase().includes('79')) {
-                             Chart.defaults.color = '#8a8a8a';
-                             new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: ['GDP Rank', 'IT Exports Rank', 'Per Capita Rank', 'Air Quality Rank'],
-                                    datasets: [{
-                                        label: 'Global Ranking (Lower bar is better)',
-                                        data: [4, 1, 149, 3],
-                                        backgroundColor: ['#d4af37', '#d4af37', '#333333', '#8b0000'],
-                                    }]
-                                },
-                                options: { responsive: true, maintainAspectRatio: false }
-                            });
-                        }
-                    }
-
-                    // Build Archives Grid
-                    document.getElementById('archive-container').innerHTML = archives.map(item => `
-                        <div class="archive-card">
-                            <span class="source-tag">Archived Report</span>
-                            <h3>${item.title}</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem;">Click to expand full analysis.</p>
+                    return `
+                    <article class="report-card ${cardClass}" onclick="openReport('${encTitle}', '${encBody}')">
+                        <div>
+                            <span class="report-label">${badge}</span>
+                            <h2>${item.title}</h2>
+                            <div class="report-preview">${item.body.substring(0, 300)}...</div>
                         </div>
-                    `).join('');
-                }
+                        <div class="read-btn">Open Secure Dossier →</div>
+                    </article>`;
+                }).join('');
 
-                // 2. Build Intelligence Grids
-                const buildCard = (item) => {
-                    const safeTitle = item.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                    const safeBias = (item.bias || 'Pending Analysis').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                    const safeSources = (item.sources || 'Primary Publisher').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                    const safeEffect = (item.effect || 'Calculating Macro Impact').replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                // Build News Intelligence
+                const buildNewsCard = (item) => {
+                    const encTitle = encodeURIComponent(item.title);
+                    const encBias = encodeURIComponent(item.bias || 'Pending Analysis');
+                    const encSources = encodeURIComponent(item.sources || 'Primary Publisher');
+                    const encEffect = encodeURIComponent(item.effect || 'Calculating Macro Impact');
                     
                     return `
-                    <article class="news-card reveal" onclick="openModal('${safeTitle}', '${safeBias}', '${safeSources}', '${safeEffect}', '${item.link}')">
+                    <article class="news-card reveal" onclick="openNewsModal('${encTitle}', '${encBias}', '${encSources}', '${encEffect}', '${item.link}')">
                         <span class="source-tag">${item.source}</span>
                         <h3>${item.title}</h3>
-                        <div class="card-footer">
-                            <span>Execute Analysis</span>
-                            <span>+</span>
-                        </div>
+                        <div class="card-footer"><span>Execute Analysis</span><span>+</span></div>
                     </article>`;
                 };
 
-                document.getElementById('india-container').innerHTML = indiaNews.map(buildCard).join('');
-                document.getElementById('global-container').innerHTML = globalNews.map(buildCard).join('');
+                document.getElementById('india-container').innerHTML = indiaNews.map(buildNewsCard).join('');
+                document.getElementById('global-container').innerHTML = globalNews.map(buildNewsCard).join('');
 
-                // Initialize observers for newly added elements
                 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-            } catch (error) {
-                console.error("Critical Data Failure:", error);
-            }
+            } catch (error) { console.error("Critical Data Failure:", error); }
         }
 
         window.onload = loadData;
